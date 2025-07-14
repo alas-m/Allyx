@@ -6,39 +6,39 @@ Allyx is a minimal, fast, and customizable Python code editor built entirely wit
 
 🧠 Syntax highlighting for Python:
 
-Keywords, strings, comments, numbers, functions
+```Keywords, strings, comments, numbers, functions```
 
-Color-coded warnings and errors
+```Color-coded warnings and errors```
 
 💻 Code runner:
 
-Run Python files directly via ▶ Run button or Ctrl + B
+```Run Python files directly via ▶ Run button or Ctrl + B```
 
 🧾 Line numbers for easy code navigation
 
 🔍 Autocomplete suggestions powered by Jedi
 
-Triggered only at the end of words
+```Triggered only at the end of words```
 
-Suggestions are dismissed on space
+```Suggestions are dismissed on space```
 
-Press Tab to accept and replace
+```Press Tab to accept and replace```
 
 📁 File explorer:
 
-Lists .py files in the project directory
+```Lists .py files in the project directory```
 
-Active file highlighted with a pill-shaped marker
+```Active file highlighted with a pill-shaped marker```
 
 🧰 Custom font support via Google Fonts (Rubik)
 
 🌀 Modern UI elements:
 
-Smooth scrollbars
+```Smooth scrollbars```
 
-Rounded buttons
+```Rounded buttons```
 
-Clean, borderless look
+```Clean, borderless look```
 
 📦 Packaged as a standalone .exe (via PyInstaller)
 
@@ -48,11 +48,11 @@ Clean, borderless look
 # 🛠 Installation
 1. Clone the repository:
    
-   <pre> ```bash # Install dependencies pip install jedi # Run the editor python main.py # Build executable pyinstaller main.py --onefile --noconsole --icon=icon.ico ``` </pre>
+   <pre> bash # Install dependencies pip install jedi # Run the editor python main.py # Build executable pyinstaller main.py --onefile --noconsole --icon=icon.ico </pre>
    
 3. Install dependencies:
    
-   <pre> ```bash # pip install jedi ``` </pre>
+   <pre> bash # pip install jedi </pre>
 
 4. (Optional) Install custom font:
 
@@ -60,13 +60,13 @@ Clean, borderless look
    
    Or install them system-wide for automatic use
 
-   <pre> ```python main.py ``` </pre>
+   <pre> python main.py </pre>
 
 # 📦 Build ```.exe``` (Windows)
 Make sure you have PyInstaller installed:
 
-<pre> ```pip install pyinstaller ``` </pre>
-<pre> ```pyinstaller main.py --onefile --noconsole --icon=icon.ico ``` </pre>
+<pre> pip install pyinstaller  </pre>
+<pre> pyinstaller main.py --onefile --noconsole --icon=icon.ico </pre>
 
 # ‼️ Move main.exe from dist folder to the root folder
 
