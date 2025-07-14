@@ -36,7 +36,6 @@ class CodeEditor(tk.Tk):
         main_frame = tk.Frame(self, bg=COLOR_SCHEME["background"])
         main_frame.pack(fill="both", expand=True)
 
-        # === File Explorer ===
         explorer_frame = tk.Frame(main_frame, width=200, bg="#2b2b2b", borderwidth=0, highlightthickness=0, relief="flat")
         explorer_frame.pack(side="left", fill="y")
         self.file_list = tk.Listbox(explorer_frame,
@@ -50,11 +49,9 @@ class CodeEditor(tk.Tk):
         self._populate_file_explorer()
         self.file_list.bind("<<ListboxSelect>>", self._open_selected_file)
 
-        # === Editor Area ===
         editor_frame = tk.Frame(main_frame, bg=COLOR_SCHEME["background"], borderwidth=0, highlightthickness=0, relief="flat")
         editor_frame.pack(side="right", fill="both", expand=True)
 
-        # Toolbar
         toolbar = tk.Frame(editor_frame, bg="#333333", borderwidth=0, highlightthickness=0, relief="flat")
         toolbar.pack(fill="x")
         run_button = tk.Button(toolbar, text="▶ Run", command=self.run_code,
@@ -63,7 +60,6 @@ class CodeEditor(tk.Tk):
                                padx=10, pady=5)
         run_button.pack(side="left", padx=10, pady=10)
 
-        # Editor + line number
         text_frame = tk.Frame(editor_frame, bg=COLOR_SCHEME["background"])
         text_frame.pack(fill="both", expand=True)
 
@@ -86,19 +82,16 @@ class CodeEditor(tk.Tk):
         scroll_x.pack(fill="x")
         self.text.configure(xscrollcommand=scroll_x.set)
 
-        # Output Console
         self.output_console = tk.Text(self, height=8, bg="#1a1a1a", fg="#ffca75", font=self.font_regular,
                                       state="disabled", borderwidth=0, highlightthickness=0, relief="flat")
         self.output_console.pack(fill="x", side="bottom")
 
-        # Autocomplete Listbox
         self.suggestion_box = tk.Listbox(self, bg="#292929", fg="white", height=4, font=self.font_regular,
                                          borderwidth=0, highlightthickness=0, relief="flat")
         self.suggestion_box.place(x=0, y=0)
         self.suggestion_box.place_forget()
         self.suggestion_box.bind("<<ListboxSelect>>", self.insert_completion)
 
-        # Menu
         self._create_menu()
 
     def _load_fonts(self):
