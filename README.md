@@ -43,7 +43,9 @@ Allyx is a minimal, fast, and customizable Python code editor built entirely wit
 📦 Packaged as a standalone .exe (via PyInstaller)
 
 # 📷 Screenshot
-<img width="779" height="742" alt="image" src="https://github.com/user-attachments/assets/ea5360bc-4f71-438e-9a4b-4c0a25edc4ca" />
+<img width="218" height="411" alt="image" src="https://github.com/user-attachments/assets/1178235a-b7ab-40da-8319-bdf730ea0780" />
+<img width="1919" height="982" alt="image" src="https://github.com/user-attachments/assets/ecfcdcab-a4cf-4887-bdf1-55136b6b7b1e" />
+
 
 # 🛠 Installation
 1. Clone the repository:
