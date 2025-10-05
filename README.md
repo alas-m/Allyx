@@ -49,11 +49,11 @@ Allyx is a minimal, fast, and customizable Python code editor built entirely wit
 # 🛠 Installation
 1. Clone the repository:
    
-   <pre> bash # Install dependencies pip install jedi # Run the editor python main.py # Build executable pyinstaller main.py --onefile --noconsole --icon=icon.ico </pre>
+   <pre> # Install dependencies pip install jedi # Run the editor python main.py # Build executable pyinstaller main.py --onefile --noconsole --icon=icon.ico </pre>
    
 3. Install dependencies:
    
-   <pre> bash # pip install jedi </pre>
+   <pre> # pip install jedi </pre>
 
 4. (Optional) Install custom font:
 
