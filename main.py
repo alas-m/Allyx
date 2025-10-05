@@ -28,6 +28,8 @@ class CodeEditor(tk.Tk):
         self.filename = None
         self.run_button_state = "normal"
         self.current_explorer_path = os.getcwd()
+        self.current_process = None 
+        self.is_running = False
 
         self._load_fonts()
         self._create_widgets()
@@ -95,15 +97,6 @@ class CodeEditor(tk.Tk):
         toolbar = tk.Frame(editor_area, bg="#2d2d30", height=40, borderwidth=0, highlightthickness=0)
         toolbar.pack(fill="x")
         toolbar.pack_propagate(False)
-
-        self.run_button = tk.Button(toolbar, text="▶ Run", command=self.run_code,
-                                   bg="#0dbc79", fg="white", 
-                                   font=(self.font_regular.actual("family"), 10, "bold"),
-                                   bd=0, highlightthickness=0, relief="flat",
-                                   padx=15, pady=6,
-                                   activebackground="#17c98f",
-                                   activeforeground="white")
-        self.run_button.pack(side="left", padx=10, pady=8)
         
         spacer = tk.Frame(toolbar, bg="#2d2d30", width=10)
         spacer.pack(side="left")
@@ -185,6 +178,15 @@ class CodeEditor(tk.Tk):
         self.suggestion_box.place_forget()
         self.suggestion_box.bind("<<ListboxSelect>>", self.insert_completion)
 
+        self.run_button = tk.Button(toolbar, text="▶ Run", command=self.toggle_run,
+                           bg="#0dbc79", fg="white", 
+                           font=(self.font_regular.actual("family"), 10, "bold"),
+                           bd=0, highlightthickness=0, relief="flat",
+                           padx=15, pady=6,
+                           activebackground="#17c98f",
+                           activeforeground="white")
+        self.run_button.pack(side="left", padx=10, pady=8)
+
         self._create_menu()
 
     def _load_fonts(self):
@@ -256,10 +258,16 @@ class CodeEditor(tk.Tk):
         self.run_button.bind("<ButtonRelease-1>", self._on_run_button_release)
 
     def _on_run_button_press(self, event=None):
-        self.run_button.config(bg="#17c98f")
+        if not self.is_running:
+            self.run_button.config(bg="#17c98f")
+        else:
+            self.run_button.config(bg="#ff6b6b") 
 
     def _on_run_button_release(self, event=None):
-        self.run_button.config(bg="#0dbc79")
+        if not self.is_running:
+            self.run_button.config(bg="#0dbc79")
+        else:
+            self.run_button.config(bg="#f44747")
 
     def _on_key_release(self, event=None):
         self.highlight_syntax()
@@ -458,22 +466,83 @@ class CodeEditor(tk.Tk):
             self.file_label.config(text=os.path.basename(path))
             self.save_file()
 
+    def toggle_run(self):
+        if self.is_running:
+            self.stop_code()
+        else:
+            self.run_code()
+
     def run_code(self):
-        self._on_run_button_press()
-        self.after(100, self._on_run_button_release)
+        if self.is_running:
+            return
+            
+        self.is_running = True
+        self.run_button.config(text="⏹ Stop", bg="#f44747", activebackground="#ff6b6b")
         
         code = self.text.get("1.0", tk.END)
         self.output_console.config(state="normal")
         self.output_console.delete("1.0", tk.END)
+        
         try:
-            with open("temp_run.py", "w", encoding="utf-8") as f:
+            if self.filename:
+                file_dir = os.path.dirname(os.path.abspath(self.filename))
+                temp_file = os.path.join(file_dir, "temp_run.py")
+            else:
+                file_dir = os.getcwd()
+                temp_file = "temp_run.py"
+            
+            with open(temp_file, "w", encoding="utf-8") as f:
                 f.write(code)
-            result = subprocess.run(["python", "temp_run.py"], capture_output=True, text=True)
-            output = result.stdout + ("\n" + result.stderr if result.stderr else "")
-            self.output_console.insert("1.0", output)
+            
+            self.current_process = subprocess.Popen(
+                ["python", "temp_run.py"], 
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd=file_dir
+            )
+            
+            self.monitor_process()
+            
         except Exception as e:
             self.output_console.insert("1.0", f"Error: {str(e)}")
-        self.output_console.config(state="disabled")
+            self._reset_run_button()
+
+    def monitor_process(self):
+        if self.current_process and self.current_process.poll() is None:
+            self.after(100, self.monitor_process)
+        else:
+            self._process_finished()
+
+    def _process_finished(self):
+        if self.current_process:
+            stdout, stderr = self.current_process.communicate()
+            output = stdout + ("\n" + stderr if stderr else "")
+            self.output_console.insert("1.0", output)
+            
+            try:
+                if self.filename:
+                    file_dir = os.path.dirname(os.path.abspath(self.filename))
+                    temp_file = os.path.join(file_dir, "temp_run.py")
+                else:
+                    temp_file = "temp_run.py"
+                os.remove(temp_file)
+            except:
+                pass
+            
+            self.current_process = None
+        
+        self._reset_run_button()
+
+    def stop_code(self):
+        if self.current_process and self.current_process.poll() is None:
+            self.current_process.terminate()
+            self.output_console.insert("1.0", "\n--- Process stopped by user ---\n")
+            self._reset_run_button()
+
+    def _reset_run_button(self):
+        self.is_running = False
+        self.run_button.config(text="▶ Run", bg="#0dbc79", activebackground="#17c98f")
 
     def show_autocomplete(self, event=None):
         if event and event.keysym in ["space", "Return", "Tab", "BackSpace", "Escape", "parenleft", "bracketleft", "quotedbl", "apostrophe", "colon", "semicolon", "comma", "period"]:
